@@ -5723,12 +5723,12 @@ function VentasMLView({store, setStore}) {
     setLoading(true);
     setError("");
     // intercambio de code → token via proxy CORS de ML
-    var redirectUri = window.location.origin + window.location.pathname;
-    fetch("https://api.mercadolibre.com/oauth/token", {
+    var redirectUri = "https://exahome1986.github.io/muebles/";
+    var PROXY = "https://ml-proxy.lgomezn.workers.dev";
+    fetch(PROXY + "/token", {
       method: "POST",
-      headers: {"Content-Type": "application/x-www-form-urlencoded", "Accept": "application/json"},
-      body: new URLSearchParams({
-        grant_type: "authorization_code",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
         client_id: cid,
         client_secret: csec,
         code: code,
@@ -5753,7 +5753,8 @@ function VentasMLView({store, setStore}) {
   function mlGet(path, setter) {
     if (!mlToken) { setError("Primero conectá tu cuenta de Mercado Libre."); return; }
     setLoading(true); setError("");
-    fetch("https://api.mercadolibre.com" + path, {
+    var PROXY = "https://ml-proxy.lgomezn.workers.dev";
+    fetch(PROXY + "/api" + path, {
       headers: {"Authorization": "Bearer " + mlToken}
     }).then(function(r){ return r.json(); }).then(function(d){
       if (d.error) {
@@ -5790,7 +5791,7 @@ function VentasMLView({store, setStore}) {
 
   function conectarML() {
     if (!mlClientId) { setError("Ingresá el Client ID primero."); return; }
-    var redirectUri = window.location.origin + window.location.pathname;
+    var redirectUri = "https://exahome1986.github.io/muebles/";
     var url = "https://auth.mercadolibre.com.ar/authorization?response_type=code&client_id=" + encodeURIComponent(mlClientId) + "&redirect_uri=" + encodeURIComponent(redirectUri);
     window.location.href = url;
   }
@@ -5816,7 +5817,7 @@ function VentasMLView({store, setStore}) {
       R("ol",{style:{paddingLeft:18,marginTop:6}},
         R("li",null,"Ingresá a ", R("a",{href:"https://developers.mercadolibre.com.ar/",target:"_blank",style:{color:"#1e40af"}},"developers.mercadolibre.com.ar")),
         R("li",null,'Creá una nueva app → copiá el ', R("b",null,"Client ID"), " y ", R("b",null,"Client Secret")),
-        R("li",null,'En la app de ML, agregá esta URL como Redirect URI: ', R("code",{style:{background:"#f5f0e8",padding:"1px 5px",borderRadius:4,fontSize:11}}, window.location.origin + window.location.pathname)),
+        R("li",null,'En la app de ML, agregá esta URL como Redirect URI: ', R("code",{style:{background:"#f5f0e8",padding:"1px 5px",borderRadius:4,fontSize:11}}, "https://exahome1986.github.io/muebles/")),
         R("li",null,"Pegá los valores abajo y hacé clic en ", R("b",null,'"Conectar con ML"'))
       )
     ),
